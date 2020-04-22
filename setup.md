@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-Before starting to use test this **API** you need to assure you have the following
+Before starting to test this **API** locally you need to assure you have the following
 prerequisites:
 
 * **Node.JS** see: [Installing Node.js](https://nodejs.org/)
