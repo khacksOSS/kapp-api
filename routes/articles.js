@@ -24,8 +24,12 @@ router.post('/', async (req,res) => {
 //get all articles
 router.get('/' , async (req,res) => {
     try {
+        //todo--> add more serch and filter options
         const articles = await Article.find()
-        res.json(articles)
+        
+        //since for now there is no search option
+        //our req is always sucess so 201
+        res.status(201).json(articles)
     } catch(err) {
         //500 for any internal error i.e my fault
         res.status(500).json({ message: err.message })
