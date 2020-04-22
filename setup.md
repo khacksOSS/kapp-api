@@ -7,8 +7,9 @@ prerequisites:
 
 * **Node.JS** see: [Installing Node.js](https://nodejs.org/)
 
-
 * **npm** see: [Installing npm](https://www.npmjs.com/get-npm)
+
+* **MongoDB** see: [Installing mongo](https://docs.mongodb.com/manual/installation/)
 
 ## Installation and usage
 
