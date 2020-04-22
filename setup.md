@@ -9,7 +9,7 @@ prerequisites:
 
 * **npm** see: [Installing npm](https://www.npmjs.com/get-npm)
 
-* **MongoDB** see: [Installing mongo](https://docs.mongodb.com/manual/installation/)
+* **MongoDB** see: [Installing MongoDB](https://docs.mongodb.com/manual/installation/)
 
 ## Installation and usage
 
