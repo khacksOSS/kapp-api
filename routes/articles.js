@@ -15,7 +15,7 @@ router.post('/', async (req,res) => {
         const newArticle = await article.save()
         //201 cause its sucess
         res.status(201).json(newArticle)
-    } catch(arr) {
+    } catch(err) {
         res.status(400).json( { message : err.message })
     }
 })
@@ -26,9 +26,15 @@ router.get('/' , async (req,res) => {
     try {
         //todo--> add more serch and filter options
         let searchOptions = {}
+        
         if( req.query.title ) {
             searchOptions.title = new RegExp(req.query.title, 'i')
-        } 
+        }
+        if( req.query.author ) {
+            searchOptions.author = new RegExp(req.query.author, 'i')
+        }
+
+
                 
         const articles = await Article.find(searchOptions)
         
