@@ -34,16 +34,9 @@ router.get('/' , async (req,res) => {
         }
               
         let sortOptions = {}
-        if( req.query.sortBy && req.query.orderBy ) {
-            sortOptions[req.query.sortBy]   = req.query.orderBy === 'desc' ? -1 : 1
-        } else if( req.query.sortBy ) {
-            sortOptions[req.query.sortBy] = -1;
-        } else if( req.query.orderBy ) {
-            sortOptions["time"] = req.query.orderBy === 'desc' ? -1 : 1
-        } else {
-            sortOptions["time"] = -1;
-        }
-
+        sortOptions[ req.query.sortBy || "time" ] = req.query.orderBy === 'asnd' ? 1 : -1
+        
+        console.log(sortOptions)
         const articles = await Article.find(searchOptions).sort(sortOptions)
         
         //since for now there is no search option
