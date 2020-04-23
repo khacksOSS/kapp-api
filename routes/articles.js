@@ -36,7 +36,6 @@ router.get('/' , async (req,res) => {
         let sortOptions = {}
         sortOptions[ req.query.sortBy || "time" ] = req.query.orderBy === 'asnd' ? 1 : -1
         
-        console.log(sortOptions)
         const articles = await Article.find(searchOptions).sort(sortOptions)
         
         //since for now there is no search option
