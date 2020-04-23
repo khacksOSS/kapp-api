@@ -25,9 +25,6 @@ router.post('/', async (req,res) => {
 router.get('/' , async (req,res) => {
     try {
         //todo--> add more serch and filter options
-<<<<<<< HEAD
-        const articles = await Article.find()
-=======
         let searchOptions = {}
         if( req.query.title ) {
             searchOptions.title = new RegExp(req.query.title, 'i')
@@ -48,7 +45,6 @@ router.get('/' , async (req,res) => {
         }
 
         const articles = await Article.find(searchOptions).sort(sortOptions)
->>>>>>> origin/master
         
         //since for now there is no search option
         //our req is always sucess so 201
