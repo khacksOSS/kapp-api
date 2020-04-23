@@ -24,7 +24,7 @@ router.post('/', async (req,res) => {
 //get all articles
 router.get('/' , async (req,res) => {
     try {
-        //todo--> add more serch and filter options
+        //todo--> add article limits, and qurey by date range
         let searchOptions = {}
         if( req.query.title ) {
             searchOptions.title = new RegExp(req.query.title, 'i')
@@ -38,8 +38,6 @@ router.get('/' , async (req,res) => {
         
         const articles = await Article.find(searchOptions).sort(sortOptions)
         
-        //since for now there is no search option
-        //our req is always sucess so 201
         res.status(201).json(articles)
     } catch(err) {
         //500 for any internal error i.e my fault
