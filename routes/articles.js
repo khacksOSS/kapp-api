@@ -20,6 +20,14 @@ router.post('/', async (req,res) => {
     }
 })
 
+/*
+module.exports.create = async (article) => {
+    if (!article)
+        throw new Error('Missing product');
+
+    await Article.create(article);
+}
+*/
 
 //get all articles
 router.get('/' , async (req,res) => {
