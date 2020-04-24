@@ -34,5 +34,6 @@ describe('Article testing', () => {
         .get('/articles/')
         expect(res.statusCode).toEqual(201)
         expect(res.body[0].author).toEqual('Sachin')
+        done();
     })
 })
