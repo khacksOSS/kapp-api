@@ -29,7 +29,7 @@ describe('Article testing', () => {
       done();
     })
 
-    it('should get a post which is posted in pervious test', async () => {
+    it('should get a post which is posted in pervious test', async done => {
         const res = await request
         .get('/articles/')
         expect(res.statusCode).toEqual(201)
