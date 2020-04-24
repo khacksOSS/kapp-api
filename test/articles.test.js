@@ -26,6 +26,7 @@ describe('Article testing', () => {
         })
       expect(res.statusCode).toEqual(201)
       expect(res.body).toHaveProperty('title')
+      done();
     })
 
     it('should get a post which is posted in pervious test', async () => {
