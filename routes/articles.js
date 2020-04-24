@@ -9,14 +9,16 @@ router.post('/', async (req,res) => {
         title : req.body.title,
         description :  req.body.description,
         author : req.body.author,
-        tags :  req.body.tags
+        tags :  req.body.tags,
+        time : req.body.time
     })
     try {
         const newArticle = await article.save()
         //201 cause its sucess
         res.status(201).json(newArticle)
     } catch(err) {
-        res.status(400).json( { message : err.message })
+        //client's mistake
+        res.status(401).json( { message : err.message })
     }
 })
 
@@ -24,13 +26,21 @@ router.post('/', async (req,res) => {
 //get all articles
 router.get('/' , async (req,res) => {
     try {
-        //todo--> add article limits, and qurey by date range
+        //todo--> add article limits
         let searchOptions = {}
         if( req.query.title ) {
             searchOptions.title = new RegExp(req.query.title, 'i')
         }
         if( req.query.author ) {
             searchOptions.author = new RegExp(req.query.author, 'i')
+        }
+
+        //we can have some default values of these as well
+        if( req.query.toDate && req.query.fromDate ) {
+            searchOptions.time = {
+                $gte: new Date(req.query.fromDate), 
+                $lte: new Date(req.query.toDate)
+            } 
         }
               
         let sortOptions = {}
