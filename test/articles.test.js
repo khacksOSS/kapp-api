@@ -6,10 +6,13 @@ const request = supertest(app)
 const dbHandler = require('./db-handler');
 
 // Connect to a new database before running any tests.
-beforeAll(async () => await dbHandler.connect());
+beforeAll(async () => {
+  await dbHandler.connect()}
+  );
 
 // Remove and close the db and server.
 afterAll(async () => await dbHandler.closeDatabase());
+afterEach(() => app.close());
 
 describe('Article testing', () => {
     
