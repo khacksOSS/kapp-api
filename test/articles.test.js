@@ -15,7 +15,7 @@ afterAll(async () => await dbHandler.closeDatabase());
 
 describe('Article testing', () => {
     
-    it('should create a new post', async () => {
+    it('should create a new post', async done => {
       const res = await request
         .post('/articles/')
         .send({
