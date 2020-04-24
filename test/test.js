@@ -13,7 +13,7 @@ let should = chai.should();
 chai.use(chaiHttp);
 //Our parent block
 describe('articles', () => {
-    beforeEach((done) => { //Before each test we empty the database
+    before((done) => { //Before each test we empty the database
         Article.remove({}, (err) => { 
            done();           
         });        
@@ -54,7 +54,6 @@ describe('articles', () => {
                   res.body.should.have.property('author').eql('justin');
                   res.body.should.have.property('_id');
                   res.body.should.have.property('time');
-
               done();
             });
       });
@@ -69,18 +68,27 @@ describe('articles', () => {
           .post('/articles')
           .send(article)
           .end((err, res) => {
-                res.should.have.status(201);
-                console.log("response ",res.body);
+                res.should.have.status(400);
                 res.body.should.be.a('object');
-                res.body.should.have.property('author').eql('justin');
-                res.body.should.have.property('_id');
-                res.body.should.have.property('time');
-
+                res.body.should.have.property('message');
             done();
           });
       });
 
-
+      it('it should GET recent insert articles', (done) => {
+        chai.request(server)
+            .get('/articles')
+            .end((err, res) => {
+                  res.should.have.status(201);
+                  res.body.should.be.a('array');
+                  res.body.length.should.be.eql(1);
+                  res.body[0].should.be.a('object');
+                  res.body[0].should.have.property('author').eql('justin');
+                  res.body[0].should.have.property('title').eql('learning test');
+                  res.body[0].should.have.property('time');            
+              done();
+            });
+      });
   });
 
 });
