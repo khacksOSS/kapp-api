@@ -5,15 +5,19 @@
   "main": "index.js",
   "scripts": {
     "devStart": "nodemon server.js",
+    "test": "mocha --exit --timeout 10000",
     "build": "webpack --mode production --progress"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "babel-loader": "^8.1.0",
     "express": "^4.17.1",
+    "mocha": "^7.1.1",
     "mongoose": "^5.9.10"
   },
   "devDependencies": {
