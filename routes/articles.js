@@ -50,7 +50,7 @@ router.get('/' , async (req,res) => {
         let sortOptions = {}
         sortOptions[ req.query.sortBy || "time" ] = req.query.orderBy === 'asc' ? 1 : -1
         
-        const articles = await Article.find(searchOptions).sort(sortOptions)
+        const articles = await Article.find(searchOptions).sort(sortOptions).limit(parseInt(req.query.limit))
         
         res.status(201).json( {message : articles} )
     } catch(err) {
