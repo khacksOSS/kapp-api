@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "devStart": "nodemon server.js",
+    "devStart": "nodemon server/server.js",
     "lint:fix": "eslint --fix ./server",
     "prettier": "prettier ./server --write",
     "build": "webpack --mode production --progress"
