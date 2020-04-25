@@ -3,6 +3,7 @@ if(process.env.NODE_ENV !== 'production' )
 
 const express = require('express')
 const app = express()
+const os = require('os')
 const mongoose = require('mongoose')
 
 if(process.env.NODE_ENV === 'test')
@@ -18,6 +19,9 @@ app.use(express.json())
 const articleRoute = require("./routes/articles")
 app.use('/articles', articleRoute)
 
-server = app.listen(process.env.PORT || 3000, () => console.log('Server Started') )
+server = app.listen(process.env.PORT || 3000, () => {
+    const host = os.hostname();
+    console.log('Server Started at ', host,':',server.address().port); }
+    )
 
 module.exports = server
