@@ -2,18 +2,22 @@ const express = require("express")
 const router = express.Router()
 const Article = require('../models/article')
 
-//put 1 article
+//put 1 or multiple article
 router.post('/', async (req,res) => {
-
-    const article = new Article({
-        title : req.body.title,
-        description :  req.body.description,
-        author : req.body.author,
-        tags :  req.body.tags,
-        time : req.body.time
-    })
     try {
-        const newArticle = await article.save()
+        const data = req.body.data;
+        let newArticle = [];
+        for (const [key, value] of Object.entries(data))
+        {
+            const article = new Article({
+                title : value.title,
+                description :  value.description,
+                author : value.author,
+                tags :  value.tags,
+                time : value.time
+            })
+            newArticle.push(await article.save());
+        }
         //201 cause its sucess
         res.status(201).json( { message : newArticle} )
     } catch(err) {
