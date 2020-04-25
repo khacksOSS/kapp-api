@@ -51,7 +51,6 @@ router.get('/' , async (req,res) => {
             }        
         } 
 
-        //we can have some default values of these as well
         if( req.query.fromDate ) {
             searchOptions.time = {
                 $gte: new Date(req.query.fromDate), 
