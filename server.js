@@ -10,12 +10,11 @@ if(process.env.NODE_ENV !== 'test')
     mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true,  useUnifiedTopology: true})
 else
     mongoose.connect(process.env.TEST_DATABASE_URL, { useNewUrlParser: true,  useUnifiedTopology: true})
+    
 const db = mongoose.connection
 db.on('error', (error) => console.log("Error from database"))
 db.once('open', () => console.log("Connected to database") )
 
-//body parser is built into express now, you just do:
-//app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
 
 const articleRoute = require("./routes/articles")

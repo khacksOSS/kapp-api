@@ -8,7 +8,7 @@ router.post('/', async (req,res) => {
         const data = req.body.data;
         let newArticle = [];
         for (const [key, value] of Object.entries(data))
-        {
+        {   
             const article = new Article({
                 title : value.title,
                 description :  value.description,
@@ -30,14 +30,26 @@ router.post('/', async (req,res) => {
 //get all articles
 router.get('/' , async (req,res) => {
     try {
-        //todo--> add article limits
+
         let searchOptions = {}
+        
         if( req.query.title ) {
             searchOptions.title = new RegExp(req.query.title, 'i')
         }
         if( req.query.author ) {
             searchOptions.author = new RegExp(req.query.author, 'i')
         }
+        if( req.query.tags ) {
+            if( typeof( req.query.tags)  === "string" ) {
+                searchOptions.tags =  new RegExp(req.query.tags, 'i')
+            } else {
+                let searchTags = []
+                req.query.tags.forEach(tag => {
+                    searchTags.push( new RegExp(tag, 'i') )
+                });
+                searchOptions.tags = { $all: searchTags }
+            }        
+        } 
 
         //we can have some default values of these as well
         if( req.query.fromDate ) {
