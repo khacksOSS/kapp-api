@@ -15,7 +15,7 @@ router.post('/', async (req,res) => {
     try {
         const newArticle = await article.save()
         //201 cause its sucess
-        res.status(201).json(newArticle)
+        res.status(201).json( { message : newArticle} )
     } catch(err) {
         //client's mistake
         res.status(401).json( { message : err.message })
@@ -44,11 +44,11 @@ router.get('/' , async (req,res) => {
         }
               
         let sortOptions = {}
-        sortOptions[ req.query.sortBy || "time" ] = req.query.orderBy === 'asnd' ? 1 : -1
+        sortOptions[ req.query.sortBy || "time" ] = req.query.orderBy === 'asc' ? 1 : -1
         
         const articles = await Article.find(searchOptions).sort(sortOptions)
         
-        res.status(201).json(articles)
+        res.status(201).json( {message : articles} )
     } catch(err) {
         //500 for any internal error i.e my fault
         res.status(500).json({ message: err.message })
