@@ -41,32 +41,35 @@ describe('articles', () => {
   */
   describe('/POST ', () => {
       it('it should POST a article ', (done) => {
-          let article = {
-            title : 'learning test',
-            description :  'writing test is always good',
-            author : 'justin',
-            tags :  'hello'
-          }
+          let data = { "data":[
+            {
+              title : 'learning test',
+              description :  'writing test is always good',
+              author : 'justin',
+              tags :  'hello'
+            }
+          ]
+          };
         chai.request(server)
             .post('/articles')
-            .send(article)
+            .send(data)
             .end((err, res) => {
                   res.should.have.status(201);
                   res.body.should.be.a('object');
                   res.body.should.have.property('message');
-                  res.body.message.should.have.property('author').eql('justin');
-                  res.body.message.should.have.property('_id');
-                  res.body.message.should.have.property('time');
+                  res.body.message[0].should.have.property('author').eql('justin');
+                  res.body.message[0].should.have.property('_id');
+                  res.body.message[0].should.have.property('time');
               done();
             });
       });
 
       it('it should fail to POST a article without title', (done) => {
-        let article = {
+        let article = [{
           description :  'writing test is always good',
           author : 'justin',
           tags :  'hello'
-        }
+        }]
       chai.request(server)
           .post('/articles')
           .send(article)
@@ -94,6 +97,33 @@ describe('articles', () => {
               done();
             });
       });
+
+      it('it should POST multiple article ', (done) => {
+        let data = {"data":[{ 
+          title : 'learning test',
+          description :  'writing test is always good',
+          author : 'justin',
+          tags :  'hello'
+        },
+        {
+        title : 'coming first in cp',
+        description :  'I will do',
+        author : 'justin',
+        tags :  'programming'
+      },
+      ]};
+      chai.request(server)
+          .post('/articles')
+          .send(data)
+          .end((err, res) => {
+                res.should.have.status(201);
+                res.body.should.be.a('object');
+                res.body.should.have.property('message');
+                res.body.message.length.should.be.eql(2);
+            done();
+          });
+    });
+
   });
 
 });
