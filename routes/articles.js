@@ -55,4 +55,16 @@ router.get('/' , async (req,res) => {
     }
 })
 
+//delete one article
+router.delete('/:articleID', async (req,res) => {
+    try {
+        const deleteMessage = await Article.deleteOne( {_id : req.params.articleID })
+        res.status(201).json( {message : deleteMessage } )
+    } catch(err) {
+        res.status(401).json( {message : err} )
+    }
+})
+
+
+
 module.exports = router
