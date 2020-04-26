@@ -10,6 +10,34 @@ let server = require('../server');
 let should = chai.should();
 
 
+// Comparing based on the property author
+function compare_author(a, b){
+  // a should come before b in the sorted order
+  if(a.author < b.author){
+          return 1;
+  // a should come after b in the sorted order
+  }else if(a.author > b.author){
+          return -1;
+  // and and b are the same
+  }else{
+          return 0;
+  }
+}
+
+// Comparing based on the property time
+function compare_time(a, b){
+  // a should come before b in the sorted order
+  if(a.time < b.time){
+          return -1;
+  // a should come after b in the sorted order
+  }else if(a.time > b.time){
+          return 1;
+  // and and b are the same
+  }else{
+          return 0;
+  }
+}
+
 chai.use(chaiHttp);
 //Our parent block
 describe('articles', () => {
@@ -45,7 +73,7 @@ describe('articles', () => {
             {
               title : 'learning test',
               description :  'writing test is always good',
-              author : 'justin',
+              author : 'abc',
               tags :  'hello'
             }
           ]
@@ -57,7 +85,7 @@ describe('articles', () => {
                   res.should.have.status(201);
                   res.body.should.be.a('object');
                   res.body.should.have.property('message');
-                  res.body.message[0].should.have.property('author').eql('justin');
+                  res.body.message[0].should.have.property('author').eql('abc');
                   res.body.message[0].should.have.property('_id');
                   res.body.message[0].should.have.property('time');
               done();
@@ -91,7 +119,7 @@ describe('articles', () => {
                   res.body.should.have.property('message').be.a('array');
                   res.body.message.length.should.be.eql(1);
                   res.body.message[0].should.be.a('object');
-                  res.body.message[0].should.have.property('author').eql('justin');
+                  res.body.message[0].should.have.property('author').eql('abc');
                   res.body.message[0].should.have.property('title').eql('learning test');
                   res.body.message[0].should.have.property('time');            
               done();
@@ -108,7 +136,7 @@ describe('articles', () => {
         {
         title : 'coming first in cp',
         description :  'I will do',
-        author : 'justin',
+        author : 'def',
         tags :  'programming'
       },
       ]};
@@ -189,12 +217,10 @@ describe('/GET articles with param ', () => {
               
 
         });
-        
         chai.request(server)
         .get('/articles')
         .end((err, res) => {
-          console.log("ARR IS",arr);
-            console.log('resp is ',res.body.message.sort(compare_time))
+            // console.log('resp is ',res.body.message.sort(compare_time))
             res.body.message.sort(compare_time).should.be.eql(arr);
         });   
         done();
