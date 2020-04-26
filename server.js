@@ -21,7 +21,7 @@ app.use(express.json())
 const articleRoute = require("./routes/articles")
 app.use('/articles', articleRoute)
 
-server = app.listen(process.env.PORT || 3000, () => {
+server = app.listen(process.env.PORT || 2500, () => {
     const host = os.hostname()
     console.log('Server Started at ', host,':',server.address().port) 
 })

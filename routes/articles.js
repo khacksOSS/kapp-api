@@ -30,9 +30,9 @@ router.post('/', async (req,res) => {
 //get all articles
 router.get('/' , async (req,res) => {
     try {
-
+        let message = {}
         let searchOptions = {}
-        
+           
         if( req.query.title ) {
             searchOptions.title = req.query.noRegxTitle || req.query.noRegxAll ? 
                                     req.query.title : 
@@ -69,22 +69,26 @@ router.get('/' , async (req,res) => {
                 $lte: new Date( req.query.toDate || Date.now )
             } 
         }
-              
+            
         let sortOptions = {}
         sortOptions[ req.query.sortBy || "time" ] = req.query.orderBy === 'asc' ? 1 : -1
         
-        const articles = await Article.find( searchOptions )
-                                        .sort(sortOptions)
-                                            .limit(parseInt(req.query.limit))
-        let data = {}
-        if( !req.query.metaOnly )   data.articles = articles
+        if( !req.query.metaOnly ) {    
+            const articles = await Article.find( searchOptions )
+                                            .sort(sortOptions)
+                                                .limit(parseInt(req.query.limit))
+
+            message.articles = articles
+        }
         if( req.query.metaTags ) {
-            data.tags = await Article.distinct("tags")
+            message.tags = await Article.distinct("tags", searchOptions )
         }
         if( req.query.metaAuthors ) {
-            data.author = await Article.distinct("author")
-        } 
-        res.status(201).json( {message : data } )
+            message.authors = await Article.distinct("author", searchOptions )
+        }
+
+        res.status(201).json( {message : message } )
+
     } catch(err) {
         //500 for any internal error i.e my fault
         res.status(500).json({ message: err.message })
