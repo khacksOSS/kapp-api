@@ -57,8 +57,8 @@ describe('articles', () => {
                   res.should.have.status(201);
                   res.body.should.be.a('object');
                   res.body.should.have.property('message');
-                  res.body.should.have.property('message').be.a('array');
-                  res.body.message.length.should.be.eql(0);
+                  res.body.message.should.have.property('articles').be.a('array');
+                  res.body.message.articles.length.should.be.eql(0);
               done();
             });
       });
@@ -116,12 +116,12 @@ describe('articles', () => {
                   res.should.have.status(201);
                   res.body.should.be.a('object');
                   res.body.should.have.property('message');
-                  res.body.should.have.property('message').be.a('array');
-                  res.body.message.length.should.be.eql(1);
-                  res.body.message[0].should.be.a('object');
-                  res.body.message[0].should.have.property('author').eql('abc');
-                  res.body.message[0].should.have.property('title').eql('learning test');
-                  res.body.message[0].should.have.property('time');            
+                  res.body.message.should.have.property('articles').be.a('array');
+                  res.body.message.articles.length.should.be.eql(1);
+                  res.body.message.articles[0].should.be.a('object');
+                  res.body.message.articles[0].should.have.property('author').eql('abc');
+                  res.body.message.articles[0].should.have.property('title').eql('learning test');
+                  res.body.message.articles[0].should.have.property('time');            
               done();
             });
       });
@@ -163,8 +163,8 @@ describe('/GET articles with param ', () => {
               res.should.have.status(201);
               res.body.should.be.a('object');
               res.body.should.have.property('message');
-              res.body.should.have.property('message').be.a('array');
-              res.body.message.length.should.be.eql(1);
+              res.body.message.should.have.property('articles').be.a('array');
+              res.body.message.articles.length.should.be.eql(1);
           done();
         });
   });
@@ -176,8 +176,8 @@ describe('/GET articles with param ', () => {
               res.should.have.status(201);
               res.body.should.be.a('object');
               res.body.should.have.property('message');
-              res.body.should.have.property('message').be.a('array');
-              res.body.message.length.should.be.eql(2);
+              res.body.message.should.have.property('articles').be.a('array');
+              res.body.message.articles.length.should.be.eql(2);
           done();
         });
   });
@@ -190,15 +190,15 @@ describe('/GET articles with param ', () => {
               res.should.have.status(201);
               res.body.should.be.a('object');
               res.body.should.have.property('message');
-              res.body.should.have.property('message').be.a('array');
-              arr = res.body.message;
+              res.body.message.should.have.property('articles').be.a('array');
+              arr = res.body.message.articles;
               
 
         });
         chai.request(server)
         .get('/articles')
         .end((err, res) => {
-            res.body.message.sort(compare_author).should.be.eql(arr);
+            res.body.message.articles.sort(compare_author).should.be.eql(arr);
         });   
         done();
   });
@@ -212,8 +212,8 @@ describe('/GET articles with param ', () => {
               res.should.have.status(201);
               res.body.should.be.a('object');
               res.body.should.have.property('message');
-              res.body.should.have.property('message').be.a('array');
-              arr = res.body.message;
+              res.body.message.should.have.property('articles').be.a('array');
+              arr = res.body.message.articles;
               
 
         });
@@ -221,7 +221,7 @@ describe('/GET articles with param ', () => {
         .get('/articles')
         .end((err, res) => {
             // console.log('resp is ',res.body.message.sort(compare_time))
-            res.body.message.sort(compare_time).should.be.eql(arr);
+            res.body.message.articles.sort(compare_time).should.be.eql(arr);
         });   
         done();
   });
@@ -233,8 +233,8 @@ describe('/GET articles with param ', () => {
               res.should.have.status(201);
               res.body.should.be.a('object');
               res.body.should.have.property('message');
-              res.body.should.have.property('message').be.a('array');
-              res.body.message.length.should.be.eql(2);
+              res.body.message.should.have.property('articles').be.a('array');
+              res.body.message.articles.length.should.be.eql(2);
           done();
         });
   });
