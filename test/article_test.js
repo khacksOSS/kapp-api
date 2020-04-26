@@ -10,6 +10,34 @@ let server = require('../server');
 let should = chai.should();
 
 
+// Comparing based on the property author
+function compare_author(a, b){
+  // a should come before b in the sorted order
+  if(a.author < b.author){
+          return 1;
+  // a should come after b in the sorted order
+  }else if(a.author > b.author){
+          return -1;
+  // and and b are the same
+  }else{
+          return 0;
+  }
+}
+
+// Comparing based on the property time
+function compare_time(a, b){
+  // a should come before b in the sorted order
+  if(a.time < b.time){
+          return -1;
+  // a should come after b in the sorted order
+  }else if(a.time > b.time){
+          return 1;
+  // and and b are the same
+  }else{
+          return 0;
+  }
+}
+
 chai.use(chaiHttp);
 //Our parent block
 describe('articles', () => {
@@ -45,7 +73,7 @@ describe('articles', () => {
             {
               title : 'learning test',
               description :  'writing test is always good',
-              author : 'justin',
+              author : 'abc',
               tags :  'hello'
             }
           ]
@@ -57,7 +85,7 @@ describe('articles', () => {
                   res.should.have.status(201);
                   res.body.should.be.a('object');
                   res.body.should.have.property('message');
-                  res.body.message[0].should.have.property('author').eql('justin');
+                  res.body.message[0].should.have.property('author').eql('abc');
                   res.body.message[0].should.have.property('_id');
                   res.body.message[0].should.have.property('time');
               done();
@@ -91,7 +119,7 @@ describe('articles', () => {
                   res.body.should.have.property('message').be.a('array');
                   res.body.message.length.should.be.eql(1);
                   res.body.message[0].should.be.a('object');
-                  res.body.message[0].should.have.property('author').eql('justin');
+                  res.body.message[0].should.have.property('author').eql('abc');
                   res.body.message[0].should.have.property('title').eql('learning test');
                   res.body.message[0].should.have.property('time');            
               done();
@@ -108,7 +136,7 @@ describe('articles', () => {
         {
         title : 'coming first in cp',
         description :  'I will do',
-        author : 'justin',
+        author : 'def',
         tags :  'programming'
       },
       ]};
@@ -125,5 +153,93 @@ describe('articles', () => {
     });
 
   });
+
+// Testing param
+describe('/GET articles with param ', () => {
+  it('it should GET all the articles with specific author name', (done) => {
+    chai.request(server)
+        .get('/articles?author=justin')
+        .end((err, res) => {
+              res.should.have.status(201);
+              res.body.should.be.a('object');
+              res.body.should.have.property('message');
+              res.body.should.have.property('message').be.a('array');
+              res.body.message.length.should.be.eql(1);
+          done();
+        });
+  });
+
+  it('it should GET all the articles with similar title', (done) => {
+    chai.request(server)
+        .get('/articles?title=learning')
+        .end((err, res) => {
+              res.should.have.status(201);
+              res.body.should.be.a('object');
+              res.body.should.have.property('message');
+              res.body.should.have.property('message').be.a('array');
+              res.body.message.length.should.be.eql(2);
+          done();
+        });
+  });
+
+  it('it should GET all the articles sorted by author', (done) => {
+    let arr = [];
+    chai.request(server)
+        .get('/articles?sortBy=author')
+        .end((err, res) => {
+              res.should.have.status(201);
+              res.body.should.be.a('object');
+              res.body.should.have.property('message');
+              res.body.should.have.property('message').be.a('array');
+              arr = res.body.message;
+              
+
+        });
+        chai.request(server)
+        .get('/articles')
+        .end((err, res) => {
+            res.body.message.sort(compare_author).should.be.eql(arr);
+        });   
+        done();
+  });
+
+
+  it('it should GET all the articles sorted by time in ascending', (done) => {
+    let arr = [];
+    chai.request(server)
+        .get('/articles?orderBy=asc')
+        .end((err, res) => {
+              res.should.have.status(201);
+              res.body.should.be.a('object');
+              res.body.should.have.property('message');
+              res.body.should.have.property('message').be.a('array');
+              arr = res.body.message;
+              
+
+        });
+        chai.request(server)
+        .get('/articles')
+        .end((err, res) => {
+            // console.log('resp is ',res.body.message.sort(compare_time))
+            res.body.message.sort(compare_time).should.be.eql(arr);
+        });   
+        done();
+  });
+
+  it('it should GET 2 articles with limit param', (done) => {
+    chai.request(server)
+        .get('/articles?limit=2')
+        .end((err, res) => {
+              res.should.have.status(201);
+              res.body.should.be.a('object');
+              res.body.should.have.property('message');
+              res.body.should.have.property('message').be.a('array');
+              res.body.message.length.should.be.eql(2);
+          done();
+        });
+  });
+});
+
+
 
 });
