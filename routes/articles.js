@@ -76,8 +76,10 @@ router.get('/' , async (req,res) => {
         const articles = await Article.find( searchOptions )
                                         .sort(sortOptions)
                                             .limit(parseInt(req.query.limit))
-        
-        res.status(201).json( {message : articles} )
+        let message = {}
+        if( !req.query.metaOnly )   message.articles = articles
+
+        res.status(201).json( {message : message } )
     } catch(err) {
         //500 for any internal error i.e my fault
         res.status(500).json({ message: err.message })
