@@ -239,55 +239,60 @@ describe('/GET articles with param ', () => {
         });
   });
 });
-
+//.then((err,res) => {return res});
 describe('/DELETE article with particular id ', () => {
   it('it should delete a article with particular id', async (done) => {
+    
     let path;
-    res = await chai.request(server)
-    .get('/articles?author=justin').end((err,res) => {return res});
-    // .end((err, res) => {
-    //       res.should.have.status(201);
-    //       res.body.should.be.a('object');
-    //       res.body.should.have.property('message');
-    //       res.body.should.have.property('message').be.a('array');
-    //       path = `/articles/${res.body.message[0]._id}`
-    //     console.log("the object is ",typeof(path), "and ", path);
-    // });
-    console.log("BEFORE ", res.body)
-    console.log("DOES IT WORK ?",path);
+    // res = await 
     chai.request(server)
-        .delete(path)
-        .end((err, res) => {
-              console.log("NOW THE PATH IS ",path)
-              res.should.have.status(201);
-              res.body.should.be.a('object');
-              res.body.should.have.property('message');
-              res.body.should.have.property('message').be.a('object');
-              res.body.message.ok.should.be.eql(1);
-          done();
-        });
+    .get('/articles?author=justin')
+    .end((err, res) => {
+          res.should.have.status(201);
+          res.body.should.be.a('object');
+          res.body.should.have.property('message');
+          res.body.should.have.property('message').be.a('array');
+          path = `/articles/${res.body.message[0]._id}`
+        return chai.request(server).delete(path).then((res)=> {
+          res.should.have.status(201);
+          res.body.should.be.a('object');
+          res.body.should.have.property('message');
+          res.body.should.have.property('message').be.a('object');
+          res.body.message.ok.should.be.eql(1);       
+          res.body.message.deletedCount.should.be.eql(1);       
+          res.body.message.n.should.be.eql(1);         
+        })
+    });
+    done();
   });
 
   it('it should have 2 articles left ', (done) => {
-    chai.request(server)
-        .get('/articles')
-        .end((err, res) => {
-              res.should.have.status(201);
-              res.body.should.be.a('object');
-              res.body.should.have.property('message');
-              res.body.should.have.property('message').be.a('array');
-              res.body.message.length.should.be.eql(2);         
-          done();
-        });
+    setTimeout(() => {
+      chai.request(server)
+      .get('/articles')
+      .end((err, res) => {
+            res.should.have.status(201);
+            res.body.should.be.a('object');
+            res.body.should.have.property('message');
+            res.body.should.have.property('message').be.a('array');
+            res.body.message.length.should.be.eql(2);         
+        done();
+      });
+    },200);
+
   });
 
-  it('it should error for a article without particular id', (done) => {
+  it('it should ignore deleting a article without particular id', (done) => {
     chai.request(server)
         .delete('/articles/5ea5dc9e92a6a52cc245389e')
         .end((err, res) => {
-          //console.log("Erro r",err);
-          //console.log("Respo",res);
-              // res.should.have.status(401);
+          res.should.have.status(201);
+          res.body.should.be.a('object');
+          res.body.should.have.property('message');
+          res.body.should.have.property('message').be.a('object');
+          res.body.message.ok.should.be.eql(1);       
+          res.body.message.deletedCount.should.be.eql(0);       
+          res.body.message.n.should.be.eql(0);   
           done();
         });
   });
