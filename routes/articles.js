@@ -81,16 +81,10 @@ router.get('/' , async (req,res) => {
             message.articles = articles
         }
         if( req.query.metaTags ) {
-            await Article.find( searchOptions )
-                            .distinct("tags", (err, allTags) => {
-                                message.tags = allTags
-                            })
+            message.tags = await Article.distinct("tags", searchOptions )
         }
         if( req.query.metaAuthors ) {
-            await Article.find( searchOptions )
-                            .distinct("author", (err, allAuthors) => {
-                                message.Authors = allAuthors
-                            })
+            message.authors = await Article.distinct("author", searchOptions )
         }
 
         res.status(201).json( {message : message } )
