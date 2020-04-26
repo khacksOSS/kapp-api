@@ -76,10 +76,15 @@ router.get('/' , async (req,res) => {
         const articles = await Article.find( searchOptions )
                                         .sort(sortOptions)
                                             .limit(parseInt(req.query.limit))
-        let message = {}
-        if( !req.query.metaOnly )   message.articles = articles
-
-        res.status(201).json( {message : message } )
+        let data = {}
+        if( !req.query.metaOnly )   data.articles = articles
+        if( req.query.metaTags ) {
+            data.tags = await Article.distinct("tags")
+        }
+        if( req.query.metaAuthors ) {
+            data.author = await Article.distinct("author")
+        } 
+        res.status(201).json( {message : data } )
     } catch(err) {
         //500 for any internal error i.e my fault
         res.status(500).json({ message: err.message })
