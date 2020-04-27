@@ -7,7 +7,9 @@
     "devStart": "nodemon server.js",
     "start": "node server.js",
     "test": "mocha --exit --timeout 10000",
-    "build": "webpack --mode production --progress"
+    "build": "webpack --mode production --progress",
+    "test-coverage": "nyc mocha --exit --timeout 10000 test",
+    "codecov": "nyc report --reporter=text-lcov > coverage.lcov && codecov -f .nyc_output/*.json -t $PORT"
   },
   "author": "",
   "license": "ISC",
@@ -22,8 +24,10 @@
     "mongoose": "^5.9.10"
   },
   "devDependencies": {
+    "codecov": "^3.6.5",
     "dotenv": "^8.2.0",
     "nodemon": "^2.0.3",
+    "nyc": "^15.0.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   }
