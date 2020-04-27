@@ -298,5 +298,21 @@ describe('/DELETE article with particular id ', () => {
   });
 });
 
+describe('/GET articles with meta param', () => {
+  it('it should GET all the articles with not articles property', (done) => {
+    chai.request(server)
+        .get('/articles?metaOnly=true')
+        .end((err, res) => {
+          res.should.have.status(201);
+              res.body.should.be.a('object');
+              res.body.should.have.property('message');
+              res.body.message.should.have.property('tags');
+              res.body.message.should.have.property('authors');
+              chai.expect(res.body.message).to.not.have.property('articles');
+          done();
+        });
+  });
+});
+
 
 });

@@ -80,6 +80,10 @@ router.get('/' , async (req,res) => {
 
             message.articles = articles
         }
+        if (req.query.metaOnly) {
+            req.query.metaTags = req.query.metaTags || req.query.metaOnly;
+            req.query.metaAuthors = req.query.metaAuthors || req.query.metaOnly
+        }
         if( req.query.metaTags ) {
             message.tags = await Article.distinct("tags", searchOptions )
         }
