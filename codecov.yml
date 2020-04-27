@@ -11,9 +11,9 @@ coverage:
         paths:
           - "src"
         # advanced
-        # branches:
-        #  - master
-        if_not_found: error
+        branches:
+         - master
+        if_not_found: success
         if_ci_failed: error
         informational: False
         only_pulls: false
