@@ -251,8 +251,8 @@ describe('/DELETE article with particular id ', () => {
           res.should.have.status(201);
           res.body.should.be.a('object');
           res.body.should.have.property('message');
-          res.body.should.have.property('message').be.a('array');
-          path = `/articles/${res.body.message[0]._id}`
+          res.body.message.should.have.property('articles').be.a('array');
+          path = `/articles/${res.body.message.articles[0]._id}`
         return chai.request(server).delete(path).then((res)=> {
           res.should.have.status(201);
           res.body.should.be.a('object');
@@ -274,8 +274,8 @@ describe('/DELETE article with particular id ', () => {
             res.should.have.status(201);
             res.body.should.be.a('object');
             res.body.should.have.property('message');
-            res.body.should.have.property('message').be.a('array');
-            res.body.message.length.should.be.eql(2);         
+            res.body.message.should.have.property('articles').be.a('array');
+            res.body.message.articles.length.should.be.eql(2);    
         done();
       });
     },200);
