@@ -1,4 +1,5 @@
 // controller for articles endpoint
+<<<<<<< HEAD
 const Article = require('../models/article');
 
 module.exports = {
@@ -102,4 +103,9 @@ module.exports = {
       res.status(401).json({ message: err });
     }
   },
+=======
+
+module.exports = {
+  // addArticle: (req, res) => {},
+>>>>>>> a641efc50324dfd6ddf1e9ea5a381f5713d23c0a
 };
