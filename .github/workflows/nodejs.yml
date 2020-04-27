@@ -41,3 +41,6 @@ jobs:
         file: ./.nyc_output/*.json # optional
         name: Test-coverage # optional
         fail_ci_if_error: true # optional (default = false)   
+    - run: npm run test-coverage --if-present
+    - run: npm run codecov -t ${{ secrets.CODECOV_TOKEN }} --if-present
+    - run: codecov --token=${{ secrets.CODECOV_TOKEN }}
