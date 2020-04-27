@@ -9,7 +9,7 @@
     "test": "mocha --exit --timeout 10000",
     "build": "webpack --mode production --progress",
     "test-coverage": "nyc mocha --exit --timeout 10000 test",
-    "codecov": "codecov -f coverage/coverage-final.json"
+    "codecov": "nyc report --reporter=text-lcov > coverage.lcov && codecov -f .nyc_output/*.json"
   },
   "author": "",
   "license": "ISC",

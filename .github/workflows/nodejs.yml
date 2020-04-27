@@ -38,6 +38,6 @@ jobs:
     - uses: codecov/codecov-action@v1.0.6
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        file: ./coverage/coverage-final.json # optional
+        file: ./.nyc_output/*.json # optional
         name: Test-coverage # optional
         fail_ci_if_error: true # optional (default = false)   
