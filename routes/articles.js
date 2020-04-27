@@ -30,40 +30,65 @@ router.post('/', async (req,res) => {
 //get all articles
 router.get('/' , async (req,res) => {
     try {
-
+        let message = {}
         let searchOptions = {}
-        
+           
         if( req.query.title ) {
-            searchOptions.title = new RegExp(req.query.title, 'i')
+            searchOptions.title = req.query.noRegxTitle || req.query.noRegxAll ? 
+                                    req.query.title : 
+                                    new RegExp(req.query.title, 'i')
         }
         if( req.query.author ) {
-            searchOptions.author = new RegExp(req.query.author, 'i')
+            searchOptions.author = req.query.noRegxAuthor || req.query.noRegxAll ? 
+                                    req.query.author : 
+                                    new RegExp(req.query.author, 'i')
         }
         if( req.query.tags ) {
-            if( typeof( req.query.tags)  === "string" ) {
-                searchOptions.tags =  new RegExp(req.query.tags, 'i')
+            if( typeof( req.query.tags )  === "string" ) {
+                searchOptions.tags =  req.query.noRegxTags || req.query.noRegxAll ? 
+                                        req.query.tags : 
+                                        new RegExp(req.query.tags, 'i')
             } else {
                 let searchTags = []
-                req.query.tags.forEach(tag => {
-                    searchTags.push( new RegExp(tag, 'i') )
-                });
+                if( req.query.noRegxTags || req.query.noRegxAll ) {
+                    req.query.tags.forEach(tag => {
+                        searchTags.push( tag )
+                    })
+                } else {
+                    req.query.tags.forEach(tag => {
+                        searchTags.push( new RegExp(tag, 'i') )
+                    })
+                }
                 searchOptions.tags = { $all: searchTags }
             }        
         } 
 
         if( req.query.fromDate ) {
             searchOptions.time = {
-                $gte: new Date(req.query.fromDate), 
+                $gte: new Date( req.query.fromDate ), 
                 $lte: new Date( req.query.toDate || Date.now )
             } 
         }
-              
+            
         let sortOptions = {}
         sortOptions[ req.query.sortBy || "time" ] = req.query.orderBy === 'asc' ? 1 : -1
         
-        const articles = await Article.find(searchOptions).sort(sortOptions).limit(parseInt(req.query.limit))
-        
-        res.status(201).json( {message : articles} )
+        if( !req.query.metaOnly ) {    
+            const articles = await Article.find( searchOptions )
+                                            .sort(sortOptions)
+                                                .limit(parseInt(req.query.limit))
+
+            message.articles = articles
+        }
+        if( req.query.metaTags ) {
+            message.tags = await Article.distinct("tags", searchOptions )
+        }
+        if( req.query.metaAuthors ) {
+            message.authors = await Article.distinct("author", searchOptions )
+        }
+
+        res.status(201).json( {message : message } )
+
     } catch(err) {
         //500 for any internal error i.e my fault
         res.status(500).json({ message: err.message })
