@@ -239,7 +239,80 @@ describe('/GET articles with param ', () => {
         });
   });
 });
+//.then((err,res) => {return res});
+describe('/DELETE article with particular id ', () => {
+  it('it should delete a article with particular id', async (done) => {
+    
+    let path;
+    // res = await 
+    chai.request(server)
+    .get('/articles?author=justin')
+    .end((err, res) => {
+          res.should.have.status(201);
+          res.body.should.be.a('object');
+          res.body.should.have.property('message');
+          res.body.message.should.have.property('articles').be.a('array');
+          path = `/articles/${res.body.message.articles[0]._id}`
+        return chai.request(server).delete(path).then((res)=> {
+          res.should.have.status(201);
+          res.body.should.be.a('object');
+          res.body.should.have.property('message');
+          res.body.should.have.property('message').be.a('object');
+          res.body.message.ok.should.be.eql(1);       
+          res.body.message.deletedCount.should.be.eql(1);       
+          res.body.message.n.should.be.eql(1);         
+        })
+    });
+    done();
+  });
 
+  it('it should have 2 articles left ', (done) => {
+    setTimeout(() => {
+      chai.request(server)
+      .get('/articles')
+      .end((err, res) => {
+            res.should.have.status(201);
+            res.body.should.be.a('object');
+            res.body.should.have.property('message');
+            res.body.message.should.have.property('articles').be.a('array');
+            res.body.message.articles.length.should.be.eql(2);    
+        done();
+      });
+    },200);
+
+  });
+
+  it('it should ignore deleting a article without particular id', (done) => {
+    chai.request(server)
+        .delete('/articles/5ea5dc9e92a6a52cc245389e')
+        .end((err, res) => {
+          res.should.have.status(201);
+          res.body.should.be.a('object');
+          res.body.should.have.property('message');
+          res.body.should.have.property('message').be.a('object');
+          res.body.message.ok.should.be.eql(1);       
+          res.body.message.deletedCount.should.be.eql(0);       
+          res.body.message.n.should.be.eql(0);   
+          done();
+        });
+  });
+});
+
+describe('/GET articles with meta param', () => {
+  it('it should GET all the articles with not articles property', (done) => {
+    chai.request(server)
+        .get('/articles?metaOnly=true')
+        .end((err, res) => {
+          res.should.have.status(201);
+              res.body.should.be.a('object');
+              res.body.should.have.property('message');
+              res.body.message.should.have.property('tags');
+              res.body.message.should.have.property('authors');
+              chai.expect(res.body.message).to.not.have.property('articles');
+          done();
+        });
+  });
+});
 
 
 });
