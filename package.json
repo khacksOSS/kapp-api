@@ -4,9 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "devStart": "nodemon server.js",
-    "start": "node server.js",
+    "dev": "nodemon server/server.js",
+    "start": "node server/server.js",
     "test": "mocha --exit --timeout 10000",
+    "lint": "eslint ./server",
+    "lint:fix": "eslint --fix ./server",
+    "prettier:check": "prettier --check ./server",
+    "prettier:write": "prettier --write ./server",
     "build": "webpack --mode production --progress",
     "test-coverage": "nyc mocha --exit --timeout 10000 test",
     "codecov": "nyc report --reporter=text-lcov > coverage.lcov && codecov -f .nyc_output/*.json -t $PORT"
@@ -26,8 +30,10 @@
   "devDependencies": {
     "codecov": "^3.6.5",
     "dotenv": "^8.2.0",
+    "eslint": "^6.8.0",
     "nodemon": "^2.0.3",
     "nyc": "^15.0.1",
+    "prettier": "^2.0.5",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   }
