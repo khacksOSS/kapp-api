@@ -10,7 +10,7 @@
     "lint": "eslint ./server",
     "lint:fix": "eslint --fix ./server",
     "prettier:check": "prettier --check ./server",
-    "prettier:write": "prettier --wrtie ./server",
+    "prettier:write": "prettier --write ./server",
     "build": "webpack --mode production --progress",
     "test-coverage": "nyc mocha --exit --timeout 10000 test",
     "codecov": "nyc report --reporter=text-lcov > coverage.lcov && codecov -f .nyc_output/*.json -t $PORT"

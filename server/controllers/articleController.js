@@ -71,21 +71,17 @@ module.exports = {
       sortOptions[req.query.sortBy || 'time'] =
         req.query.orderBy === 'asc' ? 1 : -1;
 
-      if (!req.query.metaOnly) {
+      if (!(req.query.metaOnly || req.query.noArticle)) {
         const articles = await Article.find(searchOptions)
           .sort(sortOptions)
           .limit(parseInt(req.query.limit));
 
         message.articles = articles;
       }
-      if (req.query.metaOnly) {
-        req.query.metaTags = req.query.metaTags || req.query.metaOnly;
-        req.query.metaAuthors = req.query.metaAuthors || req.query.metaOnly;
-      }
-      if (req.query.metaTags) {
+      if (req.query.metaTags || req.query.metaOnly) {
         message.tags = await Article.distinct('tags', searchOptions);
       }
-      if (req.query.metaAuthors) {
+      if (req.query.metaAuthors || req.query.metaOnly) {
         message.authors = await Article.distinct('author', searchOptions);
       }
 

@@ -8,7 +8,6 @@ const {
 
 //put 1 or multiple article
 router.post('/', addArticle);
-
 //get all articles
 router.get('/', getArticles);
 
