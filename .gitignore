@@ -4,4 +4,4 @@ build
 *.lcov
 .nyc_output
 coverage
-
+coverage

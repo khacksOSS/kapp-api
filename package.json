@@ -8,6 +8,7 @@
     "start": "node server/server.js",
     "test": "mocha --exit --timeout 10000 test/mocha/*.js",
     "test-jest": "jest --detectOpenHandles --forceExit test/jest/*.js",
+    "test:jest:codecov": "jest --detectOpenHandles --forceExit test/jest/*.js && codecov -t $TOKEN",
     "lint": "eslint ./server",
     "lint:fix": "eslint --fix ./server",
     "prettier:check": "prettier --check ./server",
