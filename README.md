@@ -42,3 +42,23 @@ prerequisites:
 ```
  npm run test-jest
 ```
+
+# Commiting/pushing to repo
+
+1. Run prettier to indent code
+
+```
+	npm run prettier:write
+```
+
+2. Run eslint to check for potential bugs
+
+```
+ npm run lint
+```
+
+3. To auto fix few errors
+
+```
+ npm run lint:fix
+```
