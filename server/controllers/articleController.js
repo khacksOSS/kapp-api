@@ -123,6 +123,6 @@ const patchArticleById = async (req, res) => {
   } catch (err) {
     res.status(401).json({ message: err });
   }
-}
+};
 
 module.exports = { getArticles, deleteArticleById, addArticle, patchArticleById, getArticleById };
