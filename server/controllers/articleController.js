@@ -94,7 +94,7 @@ const getArticles = async (req, res) => {
 
 const getArticleById = async (req, res) => {
   try {
-    const article = await Article.findOne( { _id : req.params.articleID });
+    const article = await Article.findOne({ _id: req.params.articleID });
     res.status(201).json({ message: article });
   } catch (err) {
     //500 for any internal error i.e my fault
@@ -116,8 +116,8 @@ const deleteArticleById = async (req, res) => {
 const patchArticleById = async (req, res) => {
   try {
     const updateMessage = await Article.updateOne(
-      { _id: req.params.articleID } ,
-      { $set : req.body }  
+      { _id: req.params.articleID },
+      { $set: req.body }
     );
     res.status(201).json({ message: updateMessage });
   } catch (err) {
@@ -125,4 +125,10 @@ const patchArticleById = async (req, res) => {
   }
 };
 
-module.exports = { getArticles, deleteArticleById, addArticle, patchArticleById, getArticleById };
+module.exports = {
+  getArticles,
+  deleteArticleById,
+  addArticle,
+  patchArticleById,
+  getArticleById,
+};
