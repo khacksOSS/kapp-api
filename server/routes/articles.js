@@ -15,7 +15,7 @@ router.get('/', getArticles);
 //get a single article by id
 router.get('/:articleID', getArticleById);
 //patch one article by ID
-router.patch('/:articleID', patchArticleById)
+router.patch('/:articleID', patchArticleById);
 //delete one article by ID
 router.delete('/:articleID', deleteArticleById);
 
