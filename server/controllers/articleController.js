@@ -92,6 +92,16 @@ const getArticles = async (req, res) => {
   }
 };
 
+const getArticleById = async (req, res) => {
+  try {
+    const article = await Article.findOne({ _id: req.params.articleID });
+    res.status(201).json({ message: article });
+  } catch (err) {
+    //wrong id by user
+    res.status(401).json({ message: err.message });
+  }
+};
+
 const deleteArticleById = async (req, res) => {
   try {
     const deleteMessage = await Article.deleteOne({
@@ -103,4 +113,22 @@ const deleteArticleById = async (req, res) => {
   }
 };
 
-module.exports = { getArticles, deleteArticleById, addArticle };
+const patchArticleById = async (req, res) => {
+  try {
+    const updateMessage = await Article.updateOne(
+      { _id: req.params.articleID },
+      { $set: req.body }
+    );
+    res.status(201).json({ message: updateMessage });
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+};
+
+module.exports = {
+  getArticles,
+  deleteArticleById,
+  addArticle,
+  patchArticleById,
+  getArticleById,
+};
