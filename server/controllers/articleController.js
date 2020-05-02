@@ -97,8 +97,8 @@ const getArticleById = async (req, res) => {
     const article = await Article.findOne({ _id: req.params.articleID });
     res.status(201).json({ message: article });
   } catch (err) {
-    //500 for any internal error i.e my fault
-    res.status(500).json({ message: err.message });
+    //wrong id by user 
+    res.status(401).json({ message: err.message });
   }
 };
 
