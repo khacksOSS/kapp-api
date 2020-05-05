@@ -36,7 +36,7 @@ const server = app.listen(process.env.PORT || 2500, () => {
 
 const options = {
   definition: {
-    components: {} ,
+    components: {},
     openapi: '3.0.0',
     info: {
       title: pjson.name,
@@ -44,7 +44,10 @@ const options = {
     },
   },
   // Path to the API docs
-  apis: [path.resolve(__dirname, 'models/*.js'),path.resolve(__dirname, 'routes/*.js')]
+  apis: [
+    path.resolve(__dirname, 'models/*.js'),
+    path.resolve(__dirname, 'routes/*.js'),
+  ],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
@@ -55,11 +58,11 @@ app.get('/swagger.json', (req, res) => {
 });
 
 app.get('/docs', (req, res) => {
-  console.log('dir name is ',__dirname);
+  console.log('dir name is ', __dirname);
   res.sendFile(path.join(__dirname, 'redoc.html'));
 });
 
 module.exports = {
   server,
-  swaggerSpec
+  swaggerSpec,
 };

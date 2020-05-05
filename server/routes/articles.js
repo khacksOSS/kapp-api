@@ -38,15 +38,11 @@ const {
  */
 router.post('/', addArticle);
 
-
-
 router.get('/', getArticles);
-
 
 router.get('/:articleID', getArticleById);
 
 router.patch('/:articleID', patchArticleById);
-
 
 router.delete('/:articleID', deleteArticleById);
 
