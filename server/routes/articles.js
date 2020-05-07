@@ -1,3 +1,10 @@
+/**
+ * @swagger
+ * tags:
+ *   name: Articles
+ *   description: Article managment
+ */
+
 const express = require('express');
 const router = express.Router();
 const {
@@ -8,15 +15,35 @@ const {
   deleteArticleById,
 } = require('../controllers/articleController');
 
-//put 1 or multiple article
+/**
+ * @swagger
+ * path:
+ *  /artciles/:
+ *    post:
+ *      summary: Create a new article
+ *      tags: [Articles]
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Article'
+ *      responses:
+ *        "200":
+ *          description: A artcile schema
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Article'
+ */
 router.post('/', addArticle);
-//get all articles
+
 router.get('/', getArticles);
-//get a single article by id
+
 router.get('/:articleID', getArticleById);
-//patch one article by ID
+
 router.patch('/:articleID', patchArticleById);
-//delete one article by ID
+
 router.delete('/:articleID', deleteArticleById);
 
 module.exports = router;
