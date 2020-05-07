@@ -115,7 +115,7 @@ describe('articles', () => {
         });
     });
 
-    it('it should GET recent insert articles', done => {
+    it('it should GET recently inserted articles', done => {
       chai
         .request(server)
         .get('/articles')
@@ -180,6 +180,32 @@ describe('articles', () => {
           res.body.should.have.property('message');
           res.body.message.should.have.property('articles').be.a('array');
           res.body.message.articles.length.should.be.eql(1);
+          done();
+        });
+    });
+    it('it should GET all the articles with from Date ', done => {
+      chai
+        .request(server)
+        .get('/articles?fromDate=1970-01-01')
+        .end((err, res) => {
+          res.should.have.status(201);
+          res.body.should.be.a('object');
+          res.body.should.have.property('message');
+          res.body.message.should.have.property('articles').be.a('array');
+          res.body.message.articles.length.should.be.eql(3);
+          done();
+        });
+    });
+    it('it should GET no articles with from Date and to Date same as epoch', done => {
+      chai
+        .request(server)
+        .get('/articles?fromDate=1970-01-01&toDate=1970-01-01')
+        .end((err, res) => {
+          res.should.have.status(201);
+          res.body.should.be.a('object');
+          res.body.should.have.property('message');
+          res.body.message.should.have.property('articles').be.a('array');
+          res.body.message.articles.length.should.be.eql(0);
           done();
         });
     });
@@ -256,7 +282,7 @@ describe('articles', () => {
     });
   });
   //.then((err,res) => {return res});
-  
+
   //testing the GET by ID
   describe('/GET article with particular id ', () => {
     it('it should get a article with particular id', done => {
@@ -279,9 +305,13 @@ describe('articles', () => {
               res.body.should.be.a('object');
               res.body.should.have.property('message');
               res.body.should.have.property('message').be.a('object');
-              res.body.message.should.have.property('title').eql("learning test");
-              res.body.message.should.have.property('description').eql("writing test is always good");
-              res.body.message.should.have.property('author').eql("justin");
+              res.body.message.should.have
+                .property('title')
+                .eql('learning test');
+              res.body.message.should.have
+                .property('description')
+                .eql('writing test is always good');
+              res.body.message.should.have.property('author').eql('justin');
             });
         });
       done();
@@ -301,8 +331,7 @@ describe('articles', () => {
         });
     });
   });
-  
-  
+
   describe('/DELETE article with particular id ', () => {
     it('it should delete a article with particular id', async done => {
       let path;
@@ -383,30 +412,29 @@ describe('articles', () => {
   });
 
   describe('/PATCH articles with ID', () => {
-
     let id = undefined;
     it('it should patch a added article', done => {
       //we'll first insert the article
 
       //we ll add this initially
       let beforeArticle = {
-        data : [ 
+        data: [
           {
             title: 'not yet updated',
             description: 'writing test is always good',
             author: 'sasta',
-            tags: [ "hello" ,"deletedata" ],
-          }
-        ]
+            tags: ['hello', 'deletedata'],
+          },
+        ],
       };
       //the article obj to update
       let afterArticle = {
-        title: 'i was updated' ,
+        title: 'i was updated',
         description: 'writing test is always good',
-        author: 'sasta_achar'
+        author: 'sasta_achar',
       };
 
-      //first we'll insert a article 
+      //first we'll insert a article
       chai
         .request(server)
         .post('/articles')
@@ -415,66 +443,67 @@ describe('articles', () => {
           res.should.have.status(201);
           res.body.should.be.a('object');
           res.body.should.have.property('message');
-          res.body.message[0].should.have.property('title').eql('not yet updated');
+          res.body.message[0].should.have
+            .property('title')
+            .eql('not yet updated');
           res.body.message[0].should.have.property('author').eql('sasta');
           res.body.message[0].should.have.property('_id');
           res.body.message[0].should.have.property('time');
           id = res.body.message[0]._id;
 
           //now we check the article update status
-          return  chai
-          .request(server)
-          .patch(`/articles/${id}`)
-          .send(afterArticle)
-          .end((err, res) => {
-            res.should.have.status(201);
-            res.body.should.be.a('object');
-            res.body.should.have.property('message');
-            res.body.message.should.have.property('n').eql(1);
-            res.body.message.should.have.property('nModified').eql(1);
-            res.body.message.should.have.property('ok').eql(1);
-            done();
-          });
+          return chai
+            .request(server)
+            .patch(`/articles/${id}`)
+            .send(afterArticle)
+            .end((err, res) => {
+              res.should.have.status(201);
+              res.body.should.be.a('object');
+              res.body.should.have.property('message');
+              res.body.message.should.have.property('n').eql(1);
+              res.body.message.should.have.property('nModified').eql(1);
+              res.body.message.should.have.property('ok').eql(1);
+              done();
+            });
         });
-    })
-
-
-    //the values should have changed 
-    it('it should change the values', done => {
-      chai
-      .request(server)
-      .get(`/articles/${id}`)
-      .end((err, res) => {
-        res.should.have.status(201);
-        res.body.should.be.a('object');
-        res.body.should.have.property('message');
-        res.body.message.should.have.property('title').eql('i was updated');
-        res.body.message.should.have.property('author').eql('sasta_achar');
-        res.body.message.should.have.property('_id');
-        res.body.message.should.have.property('time');
-        done();
-      });
     });
 
-    //an update to _id is not possible 
+    //the values should have changed
+    it('it should change the values', done => {
+      chai
+        .request(server)
+        .get(`/articles/${id}`)
+        .end((err, res) => {
+          res.should.have.status(201);
+          res.body.should.be.a('object');
+          res.body.should.have.property('message');
+          res.body.message.should.have.property('title').eql('i was updated');
+          res.body.message.should.have.property('author').eql('sasta_achar');
+          res.body.message.should.have.property('_id');
+          res.body.message.should.have.property('time');
+          done();
+        });
+    });
+
+    //an update to _id is not possible
     it('it should not update _id', done => {
       let illegalArticle = {
-        _id : `newID6969`,
-        title: 'this shouldnt happen' ,
+        _id: `newID6969`,
+        title: 'this shouldnt happen',
         description: 'writing test is always good',
-        author: 'sasta_achar'
+        author: 'sasta_achar',
       };
       chai
-      .request(server)
-      .patch(`/articles/${id}`)
-      .send(illegalArticle)
-      .end((err, res) => {
-        res.should.have.status(401);
-        res.body.should.be.a('object');
-        res.body.should.have.property('message');
-        res.body.message.should.have.property('name').eql("CastError");
-        done();
-      });
+        .request(server)
+        .patch(`/articles/${id}`)
+        .send(illegalArticle)
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.be.a('object');
+          res.body.should.have.property('message');
+          res.body.message.should.have.property('name').eql('CastError');
+          done();
+        });
     });
   });
 });

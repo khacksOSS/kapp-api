@@ -63,7 +63,7 @@ const getArticles = async (req, res) => {
     if (req.query.fromDate) {
       searchOptions.time = {
         $gte: new Date(req.query.fromDate),
-        $lte: new Date(req.query.toDate || Date.now),
+        $lte: new Date(req.query.toDate || Date.now()),
       };
     }
 
