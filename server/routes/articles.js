@@ -1,5 +1,7 @@
 const express = require('express');
+const checkAuth = require('../middlerware/check_auth')
 const router = express.Router();
+
 const {
   addArticle,
   getArticles,
@@ -10,12 +12,16 @@ const {
 
 //put 1 or multiple article
 router.post('/', addArticle);
+
 //get all articles
-router.get('/', getArticles);
+router.get('/', checkAuth, getArticles);
+
 //get a single article by id
-router.get('/:articleID', getArticleById);
+router.get('/:articleID', checkAuth, getArticleById);
+
 //patch one article by ID
 router.patch('/:articleID', patchArticleById);
+
 //delete one article by ID
 router.delete('/:articleID', deleteArticleById);
 
