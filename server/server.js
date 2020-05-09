@@ -1,33 +1,33 @@
-if (process.env.NODE_ENV !== 'production') require('dotenv').config();
+process.env.NODE_ENV !== 'production' && require('dotenv').config();
 
 const express = require('express');
-const app = express();
 const os = require('os');
 const mongoose = require('mongoose');
 const swaggerJSDoc = require('swagger-jsdoc');
 const path = require('path');
 var pjson = require('../package.json');
 
-if (process.env.NODE_ENV !== 'test') {
-  mongoose.connect(process.env.DATABASE_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-} else {
-  mongoose.connect(process.env.TEST_DATABASE_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-}
+(async () => {
+  try {
+    await mongoose.connect(
+      process.env.NODE_ENV !== 'test'
+        ? process.env.DATABASE_URL
+        : process.env.TEST_DATABASE_URL,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }
+    );
+    console.log('Connected to database');
+  } catch (error) {
+    console.log('Failed to connect to database', error);
+  }
+})();
 
-const db = mongoose.connection;
-db.on('error', error => console.log('Error from database', error));
-db.once('open', () => console.log('Connected to database'));
-
+const app = express();
 app.use(express.json());
 
-const articleRoute = require('./routes/articles');
-app.use('/articles', articleRoute);
+app.use('/articles', require('./routes/articles'));
 
 const server = app.listen(process.env.PORT || 2500, () => {
   const host = os.hostname();
