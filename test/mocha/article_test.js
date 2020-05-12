@@ -6,7 +6,8 @@ let Article = require('../../server/models/article');
 //Require the dev-dependencies
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-let server = require('../../server/server');
+let { server }= require('../../server/server');
+console.log("server is ",server);
 let should = chai.should();
 
 // Comparing based on the property author
