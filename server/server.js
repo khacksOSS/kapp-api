@@ -22,7 +22,7 @@ const db = mongoose.connection;
 db.on('error', error => console.log('Error from database', error));
 db.once('open', () => console.log('Connected to database'));
 
-app.use(cors())
+//app.use(cors())
 app.use(express.json());
 
 
