@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const swaggerJSDoc = require('swagger-jsdoc');
 const path = require('path');
 var pjson = require('../package.json');
+const cors = require('cors');
 
 (async () => {
   try {
@@ -25,7 +26,9 @@ var pjson = require('../package.json');
 })();
 
 const app = express();
+
 app.use(express.json());
+app.use(cors());
 
 app.use('/articles', require('./routes/articles'));
 
