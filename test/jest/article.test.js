@@ -1,4 +1,4 @@
-const app = require('../../server/server')
+const { server } = require('../../server/server')
 const articleModel = require('../../server/models/article')
 
 const mongoose = require('mongoose');
@@ -19,7 +19,7 @@ beforeAll(async () => {
 // Remove and close the db and server.
 afterAll(async () => await dbHandler.closeDatabase());
 
-afterEach(() => app.close());
+afterEach(() => server.close());
 
 describe('Article Model Test', () => {
 

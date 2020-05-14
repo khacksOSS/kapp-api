@@ -7,10 +7,12 @@ const studentSchema = new mongoose.Schema({
   },
   regId: {
     type: String,
+    unique: true,
     required: true,
   },
   macAddress: {
     type: String,
+    unique: true,
     required: true,
   },
   programme: {
@@ -27,6 +29,14 @@ const studentSchema = new mongoose.Schema({
   },
   groups: {
     type: [String]
+  },
+  role: {
+    type: String,
+    default: 'student'
+  },
+  verified: {
+    type: Boolean,
+    default: false,
   }
 });
 
