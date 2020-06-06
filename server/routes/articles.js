@@ -39,18 +39,20 @@ const {
  *              schema:
  *                $ref: '#/components/schemas/Article'
  */
+
+// post article
 router.post('/', addArticle);
 
-//get all articles
+// get all articles if authentication and permissions passes
 router.get('/', checkAuth, checkAccess, getArticles);
 
-//get a single article by id
+// get a single article by id if authentication and permissions passes
 router.get('/:articleID', checkAuth, checkAccess, getArticleById);
 
-//patch one article by ID
+// patch one article by ID
 router.patch('/:articleID', patchArticleById);
 
-//delete one article by ID
+// delete one article by ID
 router.delete('/:articleID', deleteArticleById);
 
 module.exports = router;

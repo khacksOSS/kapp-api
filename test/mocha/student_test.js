@@ -24,17 +24,15 @@ let studentVerifyDetails = {
 
 let studentSignUpDetails = { 
     name: 'I',
-    regId: 'URK16CS409',
+    regId: 'URK17CS409',
     macAddress: 'khacks9',
     groups: ['ncc', 'CS202']
 };
 
 let token
 
-/**
-* - Create an account, login with details, and check if token comes
-*/ 
-describe('student', () => {
+// Create an account, login with details, and check if token comes
+describe('Student test suit', () => {
     before(done => {
         //Before each test we empty the database
         Student.deleteMany({}, err => {

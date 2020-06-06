@@ -28,16 +28,16 @@ const studentSchema = new mongoose.Schema({
     required: true,
   },
   groups: {
-    type: [String]
+    type: [String],
   },
   role: {
     type: String,
-    default: 'student'
+    default: 'student',
   },
   verified: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 
 module.exports = mongoose.model('Student', studentSchema);
