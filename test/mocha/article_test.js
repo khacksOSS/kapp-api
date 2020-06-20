@@ -2,6 +2,8 @@ process.env.NODE_ENV = 'test';
 
 let mongoose = require('mongoose');
 let Article = require('../../server/models/article');
+let Student = require('../../server/models/student')
+let Permission = require('../../server/models/permission')
 
 //Require the dev-dependencies
 let chai = require('chai');
@@ -39,22 +41,146 @@ function compare_time(a, b) {
 }
 
 chai.use(chaiHttp);
+
+// Student signup and login data
+let studentLoginDetails = {
+    regId: 'URK16CS409',
+    macAddress: 'khacks9'
+};
+
+let studentVerifyDetails = {
+    regId: 'URK16CS409'
+};
+
+let studentSignUpDetails = { 
+    name: 'I',
+    regId: 'URK16CS409',
+    macAddress: 'khacks9',
+    groups: ['ncc', 'CS202']
+};
+
+// token to access api's
+let token
+
+describe('Student for article test', () => {
+    before(done => {
+        //Before each test we empty the database
+        Student.deleteMany({}, err => {
+            done();
+        });
+    });
+
+    describe('/POST student', () => {
+
+        // Register student
+        it('it should signup', done => {
+            chai
+                .request(server)
+                .post('/students/signup')
+                .send(studentSignUpDetails)
+                .end((err, res) => {
+                    res.should.have.status(201);
+                    res.body.should.have.property('message').eql('New Account Created');
+                    done();
+                });
+        });
+
+        // verify the student so he can login
+        it('it should verify', done => {
+            chai
+                .request(server)
+                .get('/students/verification')
+                .send(studentVerifyDetails)
+                .end((err, res) => {
+                    res.should.have.status(201);
+                    res.body.should.have.property('message').eql('Verified');
+                    done();
+                });
+        })
+
+        // student login and generate token
+        it('it should login', done => {
+            chai
+                .request(server)
+                .post('/students/login')
+                .send(studentLoginDetails)
+                .end((err, res) => {
+                    res.should.have.status(201);
+                    res.body.should.have.property('message').eql('Auth successful');
+                    res.body.should.have.property('token');
+                    token = res.body.token;
+                    done();
+                });
+        })
+    });
+});
+
+describe('Permissions for article test', () => {
+    before(done => {
+        //Before each test we empty the database
+        Permission.deleteMany({}, err => {
+            done();
+        });
+    });
+
+    describe('/POST permission', () => {
+        
+        // create permissions for article
+        it('it should create permissions for student', done => {
+            const perm = {
+                feature: 'article', 
+                role: 'student', 
+                permissions: {read: true}
+            };
+            chai
+                .request(server)
+                .post('/permissions/create')
+                .send(perm)
+                .end((err, res) => {
+                    res.should.have.status(201);
+                    res.body.should.have.property('message').eql('New Permission Created');
+                    done();
+                });
+        });
+
+        // details of permissions which are inserted
+        it('it should check permissions', done => {
+            chai
+                .request(server)
+                .get('/permissions/details')
+                // we set the auth header with our token
+                .end((err, res) => {
+                    res.should.have.status(201);
+                    res.body.should.have.property('confirmation').eql('success');
+                    res.body.data.should.be.an('Array');
+                    res.body.data.length.should.be.eql(1);
+                    res.body.data[0].permissions.read.should.be.an('Boolean').eql(true);
+                    done();
+                });
+        });
+    });
+});
+
 //Our parent block
-describe('articles', () => {
+describe('Articles test suit', () => {
     before(done => {
         //Before each test we empty the database
         Article.deleteMany({}, err => {
             done();
         });
     });
+    
     /*
      * Test the /GET route
      */
     describe('/GET articles', () => {
+
         it('it should GET all the articles', done => {
             chai
                 .request(server)
                 .get('/articles')
+                // set Authorization token and feature to be accessed here it's article
+                .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
                 .end((err, res) => {
                     res.should.have.status(201);
                     res.body.should.be.a('object');
@@ -116,6 +242,8 @@ describe('articles', () => {
             chai
                 .request(server)
                 .get('/articles')
+                // set Authorization token and feature to be accessed here it's article
+                .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
                 .end((err, res) => {
                     res.should.have.status(201);
                     res.body.should.be.a('object');
@@ -170,6 +298,8 @@ describe('articles', () => {
             chai
                 .request(server)
                 .get('/articles?author=justin')
+                // set Authorization token and feature to be accessed here it's article
+                .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
                 .end((err, res) => {
                     res.should.have.status(201);
                     res.body.should.be.a('object');
@@ -183,6 +313,8 @@ describe('articles', () => {
             chai
                 .request(server)
                 .get('/articles?fromDate=1970-01-01')
+                // set Authorization token and feature to be accessed here it's article
+                .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
                 .end((err, res) => {
                     res.should.have.status(201);
                     res.body.should.be.a('object');
@@ -196,6 +328,8 @@ describe('articles', () => {
             chai
                 .request(server)
                 .get('/articles?fromDate=1970-01-01&toDate=1970-01-01')
+                // set Authorization token and feature to be accessed here it's article
+                .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
                 .end((err, res) => {
                     res.should.have.status(201);
                     res.body.should.be.a('object');
@@ -210,6 +344,8 @@ describe('articles', () => {
             chai
                 .request(server)
                 .get('/articles?title=learning')
+                // set Authorization token and feature to be accessed here it's article
+                .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
                 .end((err, res) => {
                     res.should.have.status(201);
                     res.body.should.be.a('object');
@@ -219,26 +355,21 @@ describe('articles', () => {
                     done();
                 });
         });
-
-        it('it should GET all the articles sorted by author', done => {
-            let arr = [];
+        
+        it('it should GET 2 articles with limit param', done => {
             chai
                 .request(server)
-                .get('/articles?sortBy=author')
+                .get('/articles?limit=2')
+                // set Authorization token and feature to be accessed here it's article
+                .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
                 .end((err, res) => {
                     res.should.have.status(201);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
                     res.body.message.should.have.property('articles').be.a('array');
-                    arr = res.body.message.articles;
+                    res.body.message.articles.length.should.be.eql(2);
+                    done();
                 });
-            chai
-                .request(server)
-                .get('/articles')
-                .end((err, res) => {
-                    res.body.message.articles.sort(compare_author).should.be.eql(arr);
-                });
-            done();
         });
 
         it('it should GET all the articles sorted by time in ascending', done => {
@@ -246,6 +377,8 @@ describe('articles', () => {
             chai
                 .request(server)
                 .get('/articles?orderBy=asc')
+                // set Authorization token and feature to be accessed here it's article
+                .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
                 .end((err, res) => {
                     res.should.have.status(201);
                     res.body.should.be.a('object');
@@ -256,6 +389,8 @@ describe('articles', () => {
             chai
                 .request(server)
                 .get('/articles')
+                // set Authorization token and feature to be accessed here it's article
+                .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
                 .end((err, res) => {
                     // console.log('resp is ',res.body.message.sort(compare_time))
                     res.body.message.articles.sort(compare_time).should.be.eql(arr);
@@ -263,20 +398,36 @@ describe('articles', () => {
             done();
         });
 
-        it('it should GET 2 articles with limit param', done => {
-            chai
-                .request(server)
-                .get('/articles?limit=2')
-                .end((err, res) => {
-                    res.should.have.status(201);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('message');
-                    res.body.message.should.have.property('articles').be.a('array');
-                    res.body.message.articles.length.should.be.eql(2);
-                    done();
-                });
+        describe('sorted by author', () => {
+        
+            it('it should GET all the articles sorted by author', done => {
+                let arr = [];
+                chai
+                    .request(server)
+                    .get('/articles?sortBy=author')
+                    // set Authorization token and feature to be accessed here it's article
+                    .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
+                    .end((err, res) => {
+                        res.should.have.status(201);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('message');
+                        res.body.message.should.have.property('articles').be.a('array');
+                        arr = res.body.message.articles;
+                    });
+                chai
+                    .request(server)
+                    .get('/articles')
+                    // set Authorization token and feature to be accessed here it's article
+                    .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
+                    .end((err, res) => {
+                        res.body.message.articles.sort(compare_author).should.be.eql(arr);
+                    });
+                done();
+            });
+            
         });
     });
+
     //.then((err,res) => {return res});
 
     //testing the GET by ID
@@ -287,6 +438,8 @@ describe('articles', () => {
             chai
                 .request(server)
                 .get('/articles?author=justin')
+                // set Authorization token and feature to be accessed here it's article
+                .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
                 .end((err, res) => {
                     res.should.have.status(201);
                     res.body.should.be.a('object');
@@ -296,6 +449,8 @@ describe('articles', () => {
                     return chai
                         .request(server)
                         .get(path)
+                        // set Authorization token and feature to be accessed here it's article
+                        .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
                         .then(res => {
                             res.should.have.status(201);
                             res.body.should.be.a('object');
@@ -317,6 +472,8 @@ describe('articles', () => {
             chai
                 .request(server)
                 .get('/articles/notPossibleID')
+                // set Authorization token and feature to be accessed here it's article
+                .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
                 .end((err, res) => {
                     res.should.have.status(401);
                     res.body.should.be.a('object');
@@ -335,6 +492,8 @@ describe('articles', () => {
             chai
                 .request(server)
                 .get('/articles?author=justin')
+                // set Authorization token and feature to be accessed here it's article
+                .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
                 .end((err, res) => {
                     res.should.have.status(201);
                     res.body.should.be.a('object');
@@ -362,6 +521,8 @@ describe('articles', () => {
                 chai
                     .request(server)
                     .get('/articles')
+                    // set Authorization token and feature to be accessed here it's article
+                    .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
                     .end((err, res) => {
                         res.should.have.status(201);
                         res.body.should.be.a('object');
@@ -395,6 +556,8 @@ describe('articles', () => {
             chai
                 .request(server)
                 .get('/articles?metaOnly=true')
+                // set Authorization token and feature to be accessed here it's article
+                .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
                 .end((err, res) => {
                     res.should.have.status(201);
                     res.body.should.be.a('object');
@@ -467,6 +630,8 @@ describe('articles', () => {
             chai
                 .request(server)
                 .get(`/articles/${id}`)
+                // set Authorization token and feature to be accessed here it's article
+                .set({'Authorization': `Bearer ${token}`, 'feature': 'article'})
                 .end((err, res) => {
                     res.should.have.status(201);
                     res.body.should.be.a('object');

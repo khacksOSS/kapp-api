@@ -30,7 +30,14 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use('/articles', require('./routes/articles'));
+const articleRoute = require('./routes/articles');
+app.use('/articles', articleRoute);
+
+const studentRoute = require('./routes/students');
+app.use('/students', studentRoute);
+
+const permissionRoute = require('./routes/permissions');
+app.use('/permissions', permissionRoute);
 
 const server = app.listen(process.env.PORT || 2500, () => {
   const host = os.hostname();

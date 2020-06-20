@@ -6,7 +6,10 @@
  */
 
 const express = require('express');
+const checkAuth = require('../middlerware/check_auth');
+const checkAccess = require('../middlerware/check_access');
 const router = express.Router();
+
 const {
   addArticle,
   getArticles,
@@ -36,14 +39,20 @@ const {
  *              schema:
  *                $ref: '#/components/schemas/Article'
  */
+
+// post article
 router.post('/', addArticle);
 
-router.get('/', getArticles);
+// get all articles if authentication and permissions passes
+router.get('/', checkAuth, checkAccess, getArticles);
 
-router.get('/:articleID', getArticleById);
+// get a single article by id if authentication and permissions passes
+router.get('/:articleID', checkAuth, checkAccess, getArticleById);
 
+// patch one article by ID
 router.patch('/:articleID', patchArticleById);
 
+// delete one article by ID
 router.delete('/:articleID', deleteArticleById);
 
 module.exports = router;
