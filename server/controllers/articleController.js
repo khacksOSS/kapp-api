@@ -1,5 +1,32 @@
 const Article = require('../models/article');
 
+/**
+ * @swagger
+ *  components:
+ *    schemas:
+ *      AddArticle:
+ *        type: object
+ *        properties:
+ *          message:
+ *            type: array
+ *            description: Array of articles posted
+ *        example:
+ *           message: [{
+ *              title: Books,
+ *              description: None,
+ *              author: jeffin,
+ *              tags: [new, old]
+ *                    }]
+ *      Error:
+ *        type: object
+ *        properties:
+ *          message:
+ *            type: string
+ *            description: Error client made a mistake
+ *        example:
+ *           message: Error message
+ */
+
 const addArticle = async (req, res) => {
   try {
     const data = req.body.data;
@@ -21,6 +48,25 @@ const addArticle = async (req, res) => {
     res.status(401).json({ message: err.message });
   }
 };
+
+/**
+ * @swagger
+ *  components:
+ *    schemas:
+ *      GetArticle:
+ *        type: object
+ *        properties:
+ *          message:
+ *            type: array
+ *            description: Array of articles
+ *        example:
+ *           message: [{
+ *              title: Books,
+ *              description: None,
+ *              author: jeffin,
+ *              tags: [new, old]
+ *                    },]
+ */
 
 const getArticles = async (req, res) => {
   try {
