@@ -1,3 +1,10 @@
+/**
+ * @swagger
+ * tags:
+ *   name: Permissions
+ *   description: Permissions managment
+ */
+
 const Permission = require('../models/permission');
 
 //  seed database with demo feature details
@@ -34,6 +41,21 @@ const seedDataArticle = async (req, res) => {
     message: 'Database seeded Permission!',
   });
 };
+
+/**
+ * @swagger
+ * path:
+ *  /permissions/create:
+ *    post:
+ *      summary: Create a new permission
+ *      tags: [Permissions]
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Permission'
+ */
 
 //  add new permissions in database with feature details
 const addPermission = async (req, res) => {

@@ -37,11 +37,42 @@ const {
  *          content:
  *            application/json:
  *              schema:
- *                $ref: '#/components/schemas/Article'
+ *                $ref: '#/components/schemas/AddArticle'
+ *        "401":
+ *          description: Client mistake Error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Error'
  */
 
 // post article
 router.post('/', addArticle);
+
+/**
+ * @swagger
+ * path:
+ *  /artciles/:
+ *    get:
+ *      security:
+ *        - bearerAuth: []
+ *          featureAccess: []
+ *      summary: Get all article
+ *      tags: [Articles]
+ *      responses:
+ *        "200":
+ *          description: A artcile schema
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/AddArticle'
+ *        "401":
+ *          description: Client mistake Error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Error'
+ */
 
 // get all articles if authentication and permissions passes
 router.get('/', checkAuth, checkAccess, getArticles);
